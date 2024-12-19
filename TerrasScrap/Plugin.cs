@@ -36,10 +36,14 @@ public class Plugin : BaseUnityPlugin
 
 internal class StartOfRoundPatch
 {
+    private static bool executed = false;
+
     [HarmonyPatch(typeof(StartOfRound), "Awake")]
     [HarmonyPostfix]
     private static void StartOfRoundPostfix(ref StartOfRound __instance)
     {
+        if (executed) return; executed = true;
+
         List<ExtendedItem> modExtendedItems = LethalLevelLoader.PatchedContent.ExtendedItems.Where(x => x.ModName == "Terra's Scrap").ToList();
         Dictionary<string, ItemGroup> itemGroups = [];
         Dictionary<string, Item> modItems = [];

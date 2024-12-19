@@ -1,6 +1,6 @@
 {
     "name": "TerrasScrap",
-    "version_number": "1.0.0",
+    "version_number": "1.0.1",
 	"website_url": "https://github.com/Terraformer9x/Terras-Scrap",
     "description": "A small collection of vanilla styled scrap.",
     "dependencies": [

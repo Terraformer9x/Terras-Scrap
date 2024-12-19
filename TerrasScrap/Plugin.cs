@@ -15,7 +15,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string pluginGUID = "terraformer9x.TerrasScrap";
     private const string pluginName = "Terra's Scrap";
-    private const string pluginVersion = "1.0.0";
+    private const string pluginVersion = "1.0.1";
 
     private readonly Harmony harmony = new(pluginGUID);
     public static Plugin Instance;

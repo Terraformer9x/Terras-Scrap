@@ -1,0 +1,10 @@
+{
+    "name": "TerrasScrap",
+    "version_number": "1.0.0",
+	"website_url": "https://github.com/Terraformer9x/Terras-Scrap",
+    "description": "A small collection of vanilla styled scrap.",
+    "dependencies": [
+		"BepInEx-BepInExPack-5.4.2100",
+        "IAmBatby-LethalLevelLoader-1.2.2"
+	]
+}

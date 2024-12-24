@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Windows.Speech;
 
 namespace TerrasScrap;
 
@@ -15,7 +16,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string pluginGUID = "terraformer9x.TerrasScrap";
     private const string pluginName = "Terra's Scrap";
-    private const string pluginVersion = "1.0.1";
+    private const string pluginVersion = "1.0.2";
 
     private readonly Harmony harmony = new(pluginGUID);
     public static Plugin Instance;
@@ -24,7 +25,7 @@ public class Plugin : BaseUnityPlugin
     {
         Instance ??= this;
 
-        Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+        Logger.LogInfo($"Plugin {pluginName} {pluginVersion}  is loaded!");
 
         harmony.PatchAll(typeof(StartOfRoundPatch));
     }
@@ -43,17 +44,21 @@ internal class StartOfRoundPatch
     private static void StartOfRoundPostfix(ref StartOfRound __instance)
     {
         if (executed) return; executed = true;
-
-        List<ExtendedItem> modExtendedItems = LethalLevelLoader.PatchedContent.ExtendedItems.Where(x => x.ModName == "Terra's Scrap").ToList();
-        Dictionary<string, ItemGroup> itemGroups = [];
-        Dictionary<string, Item> modItems = [];
-        foreach (ItemGroup itemGroup in Resources.FindObjectsOfTypeAll<ItemGroup>())
+        Dictionary<string, List<ItemGroup>> itemGroups = [];
+        foreach(ItemGroup itemGroup in Resources.FindObjectsOfTypeAll<ItemGroup>())
         {
-            if (itemGroup != null && !itemGroups.ContainsKey(itemGroup.name) && !itemGroups.ContainsValue(itemGroup))
+            if(!itemGroups.ContainsKey(itemGroup.name))
             {
-                itemGroups.Add(itemGroup.name, itemGroup);
+                List<ItemGroup> itemGroupList = [itemGroup];
+                itemGroups.Add(itemGroup.name, itemGroupList);
+            }
+            else
+            {
+                itemGroups[itemGroup.name].Add(itemGroup);
             }
         }
+        List<ExtendedItem> modExtendedItems = LethalLevelLoader.PatchedContent.ExtendedItems.Where(x => x.ModName == "Terra's Scrap").ToList();
+        Dictionary<string, Item> modItems = [];
         foreach (ExtendedItem extendedItem in modExtendedItems)
         {
             if (extendedItem.Item != null && !modItems.ContainsKey(extendedItem.Item.name) && !modItems.ContainsValue(extendedItem.Item))
@@ -61,10 +66,10 @@ internal class StartOfRoundPatch
                 modItems.Add(extendedItem.Item.name, extendedItem.Item);
             }
         }
-        modItems["TrafficCone"].spawnPositionTypes.Add(itemGroups["GeneralItemClass"]);
-        modItems["Tuba"].spawnPositionTypes.Add(itemGroups["GeneralItemClass"]);
-        modItems["WineBottle"].spawnPositionTypes.Add(itemGroups["TabletopItems"]);
-        modItems["Fan"].spawnPositionTypes.Add(itemGroups["GeneralItemClass"]);
-        modItems["Fan"].spawnPositionTypes.Add(itemGroups["TabletopItems"]);
+        modItems["TrafficCone"].spawnPositionTypes.AddRange(itemGroups["GeneralItemClass"]);
+        modItems["Tuba"].spawnPositionTypes.AddRange(itemGroups["GeneralItemClass"]);
+        modItems["WineBottle"].spawnPositionTypes.AddRange(itemGroups["TabletopItems"]);
+        modItems["Fan"].spawnPositionTypes.AddRange(itemGroups["GeneralItemClass"]);
+        modItems["Fan"].spawnPositionTypes.AddRange(itemGroups["TabletopItems"]);
     }
 }

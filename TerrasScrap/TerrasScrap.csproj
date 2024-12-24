@@ -5,7 +5,7 @@
         <AssemblyName>TerrasScrap</AssemblyName>
         <AssemblyTitle>Terra's Scrap</AssemblyTitle>
         <Description>A small collection of vanilla styled scrap.</Description>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
